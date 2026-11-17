@@ -63,4 +63,10 @@ void testScoreFiveDirectlyReturned() {
     assertEquals(5, DataFlowTargets.bonus(
             new int[]{1, 0}, 1));
 }
+
+@Test
+void testM2KillPresentAndStreakDiffer() {
+    assertEquals(5, DataFlowTargets.bonus(
+            new int[]{1, 0, 1, 0, 1, 0, 1, 1}, 5));
+}
 }
