@@ -85,33 +85,19 @@ OS name: "mac os x", version: "27.0.1", arch: "aarch64", family: "mac"
 ## 2.2. DU Pairs хүснэгт
 
 | Variable | Def line | Use line | Use type | Def-clear path | Test ID | Covered |
-
 |---|---:|---:|---|---|---|---|
-
 | x | 13 | 16 | C-use | 13 → 15(T) → 16 | `testGcdWithLoop()` | Yes |
-
 | x | 13 | 20 | C-use | 13 → 15(F) → 20 | `testGcdWithoutLoop()` | Yes |
-
 | x | 17 | 16 | C-use | 17 → 18 → 15(T) → 16 | `testGcdWithLoop()` | Yes |
-
 | x | 17 | 20 | C-use | 17 → 18 → 15(F) → 20 | `testGcdWithLoop()` | Yes |
-
 | y | 13 | 15 | P-use (T) | 13 → 15(T) | `testGcdWithLoop()` | Yes |
-
 | y | 13 | 15 | P-use (F) | 13 → 15(F) | `testGcdWithoutLoop()` | Yes |
-
 | y | 13 | 16 | C-use | 13 → 15(T) → 16 | `testGcdWithLoop()` | Yes |
-
 | y | 13 | 17 | C-use | 13 → 15(T) → 16 → 17 | `testGcdWithLoop()` | Yes |
-
 | y | 18 | 15 | P-use (T) | 18 → 15(T) | `testGcdWithLoop()` | Yes |
-
 | y | 18 | 15 | P-use (F) | 18 → 15(F) | `testGcdWithLoop()` | Yes |
-
 | y | 18 | 16 | C-use | 18 → 15(T) → 16 | `testGcdWithLoop()` | Yes |
-
 | y | 18 | 17 | C-use | 18 → 15(T) → 16 → 17 | `testGcdWithLoop()` | Yes |
-
 | tmp | 16 | 18 | C-use | 16 → 17 → 18 | `testGcdWithLoop()` | Yes |
 
 `y` хувьсагчийн 18-р мөрийн Definition-ээс 15-р мөрийн P-use рүү хүрэх зам нь давталтын дараагийн нөхцөл шалгалтаар тодорхойлогдоно. `testGcdWithLoop()` нь давталт үргэлжлэх болон дуусах нөхцөлийг хамруулна.
@@ -184,7 +170,7 @@ BUILD SUCCESS
 
 - Дараалсан ирцийн хамгийн урт цуваа 5 буюу түүнээс их бол нэмэлт 3 оноо өгнө.
 
-- `attendance == null` эсвэл `threshold < 0` бол `IllegalArgumentException` үүсгэнэ.
+- `attendance == null || threshold < 0` нөхцөл үнэн бол `IllegalArgumentException` үүсгэнэ.
 
 ## 3.2. B1 — Control Flow Graph
 
@@ -202,7 +188,7 @@ CFG-д дараах урсгалуудыг дүрсэлсэн:
 
 - For-each давталт
 
-- `a > 0` нөхцөл
+- `38→39(T)` нөхцөл
 
 - `streak > best` нөхцөл
 
@@ -216,62 +202,37 @@ For-each давталтын 38-р мөрөнд `attendance` массивын д�
 
 ## 3.3. B2 — Definition / Use жагсаалт
 
-- ****Def:**** хувьсагчид шинэ утга оноох үйлдэл.
+- **Def:** хувьсагчид шинэ утга оноох үйлдэл.
 
-- ****C-use:**** тооцоолол болон утга ашиглах үйлдэл.
+- **C-use:** тооцоолол болон утга ашиглах үйлдэл.
 
-- ****P-use:**** нөхцөл шалгах үед хувьсагч ашиглах үйлдэл.
+- **P-use:** нөхцөл шалгах үед хувьсагч ашиглах үйлдэл.
 
 | Line | Variable | Def | C-use | P-use |
-
 |---:|---|---|---|---|
-
 | 31 | attendance | Parameter Def | — | — |
-
 | 31 | threshold | Parameter Def | — | — |
-
 | 32 | attendance | — | — | `attendance == null` |
-
-| 32 | threshold | — | — | `threshold < 0` (short-circuit нөхцөл) |
-
+| 32 | threshold | — | — | `attendance != null` үед `threshold < 0` |
 | 35 | present | Def | — | — |
-
 | 36 | streak | Def | — | — |
-
 | 37 | best | Def | — | — |
-
 | 38 | attendance | — | — | Дараагийн элемент байгаа эсэх |
-
 | 38 | a | Def | — | — |
-
-| 39 | a | — | — | `a > 0` |
-
+| 39 | a | — | — | `38→39(T)` |
 | 40 | present | Def | `present` | — |
-
 | 41 | streak | Def | `streak` | — |
-
 | 42 | streak | — | — | `streak > best` |
-
 | 42 | best | — | — | `streak > best` |
-
 | 43 | streak | — | C-use | — |
-
 | 43 | best | Def | — | — |
-
 | 46 | streak | Def | — | — |
-
 | 49 | score | Def | — | — |
-
-| 50 | present | — | — | `present >= threshold` |
-
-| 50 | threshold | — | — | `present >= threshold` |
-
+| 50 | present | — | — | `present >= threshold` (T/F) |
+| 50 | threshold | — | — | `present >= threshold` (T/F) |
 | 51 | score | Def | — | — |
-
 | 53 | best | — | — | `best >= 5` |
-
 | 54 | score | Def | `score` | — |
-
 | 56 | score | — | C-use | — |
 
 ### Хувьсагч тус бүрийн Def/Use
@@ -371,74 +332,40 @@ streak = 0;
 ### 3.5.1. DU Pairs хүснэгт
 
 | Variable | Def line | Use line | Use type | Def-clear path / нөхцөл | Test ID |
-
 |---|---:|---:|---|---|---|
-
-| attendance | 31 | 32 | P-use (T) | `attendance == null` | `testNullAttendance()` |
-
-| attendance | 31 | 32 | P-use (F) | `attendance != null` | `testNegativeThreshold()` |
-
-| attendance | 31 | 38 | P-use (T) | Массивт дараагийн элемент байна | `testAllDefsScoreFiveAndEight()` |
-
-| attendance | 31 | 38 | P-use (F) | Давталт дуусна; хоосон массивын тохиолдол | `testInitialPresentDefToScoreTrue()` |
-
-| threshold | 31 | 32 | P-use (T) | `attendance != null` үед `threshold < 0` | `testNegativeThreshold()` |
-
-| threshold | 31 | 32 | P-use (F) | `attendance != null` үед `threshold >= 0` | `testAllDefsScoreFiveAndEight()` |
-
-| threshold | 31 | 50 | P-use (T) | `present >= threshold` | `testAllDefsScoreFiveAndEight()` |
-
-| threshold | 31 | 50 | P-use (F) | `present < threshold` | `testScoreInitialDefToAddition()` |
-
-| present | 35 | 40 | C-use | Эхний эерэг ирц дээр `present + 1` | `testAllDefsScoreFiveAndEight()` |
-
-| present | 40 | 40 | C-use | Дараагийн эерэг ирц дээр өмнөх утгыг ашиглах | `testAllDefsScoreFiveAndEight()` |
-
-| present | 35 | 50 | P-use (T) | Эерэг ирцгүй, `threshold = 0` | `testInitialPresentDefToScoreTrue()` |
-
-| present | 35 | 50 | P-use (F) | Эерэг ирцгүй, `threshold > 0` | `testInitialPresentDefToScoreFalse()` |
-
-| present | 40 | 50 | P-use (T) | Ирсэн өдрийн тоо threshold-д хүрсэн | `testAllDefsScoreFiveAndEight()` |
-
-| present | 40 | 50 | P-use (F) | Ирсэн өдрийн тоо threshold-д хүрээгүй | `testScoreInitialDefToAddition()` |
-
-| streak | 36 | 41 | C-use | Эхний элемент эерэг үед өмнөх утгыг ашиглах | `testAllDefsScoreFiveAndEight()` |
-
-| streak | 41 | 41 | C-use | Дараалсан эерэг элемент дээр өмнөх утгыг ашиглах | `testAllDefsScoreFiveAndEight()` |
-
-| streak | 41 | 42 | P-use (T) | `streak > best` үнэн | `testAllDefsScoreFiveAndEight()` |
-
-| streak | 41 | 42 | P-use (F) | Өмнөх best-ээс streak их биш | `testStreakResetAndBestFalseBranch()` |
-
-| streak | 41 | 43 | C-use | 42-р мөрийн нөхцөл үнэн тул `best = streak` | `testAllDefsScoreFiveAndEight()` |
-
-| streak | 46 | 41 | C-use | Тасалсны дараах эерэг өдөрт streak-ийн хуучин утгыг ашиглах | `testAllDefsScoreZeroAndStreakReset()` |
-
-| best | 37 | 42 | P-use (T) | Эхний эерэг streak дээр `1 > 0` | `testAllDefsScoreFiveAndEight()` |
-
-| best | 43 | 42 | P-use (T) | Шинэ streak өмнөх best-ээс их | `testAllDefsScoreFiveAndEight()` |
-
-| best | 43 | 42 | P-use (F) | Шинэ streak өмнөх best-ээс их биш | `testStreakResetAndBestFalseBranch()` |
-
-| best | 37 | 53 | P-use (F) | Эерэг ирцгүй үед best анхны 0 хэвээр | `testInitialPresentDefToScoreFalse()` |
-
-| best | 43 | 53 | P-use (T) | Хамгийн урт streak 5 буюу түүнээс их | `testAllDefsScoreFiveAndEight()` |
-
-| best | 43 | 53 | P-use (F) | Хамгийн урт streak 5-аас бага | `testStreakResetAndBestFalseBranch()` |
-
-| score | 49 | 54 | C-use | Threshold нөхцөл худал, best нөхцөл үнэн | `testScoreInitialDefToAddition()` |
-
-| score | 51 | 54 | C-use | 5 онооны дараа нэмэлт 3 оноо нэмэх | `testAllDefsScoreFiveAndEight()` |
-
-| score | 49 | 56 | C-use | Хоёр онооны нөхцөл хоёулаа худал | `testInitialPresentDefToScoreFalse()` |
-
-| score | 51 | 56 | C-use | 5 оноо авсан боловч нэмэлт оноо аваагүй | `testScoreFiveDirectlyReturned()` |
-
-| score | 54 | 56 | C-use | Нэмэлт 3 оноо тооцсоны дараа буцаах | `testAllDefsScoreFiveAndEight()` |
-
-| a | 38 | 39 | P-use (T) | `a > 0` | `testAllDefsScoreFiveAndEight()` |
-
-| a | 38 | 39 | P-use (F) | `a <= 0` | `testAllDefsScoreZeroAndStreakReset()` |
+| attendance | 31 | 32 | P-use (T) | `31→32(T)` (`attendance == null`) | `testNullAttendance()` |
+| attendance | 31 | 32 | P-use (F) | `31→32(F)` (`attendance != null`) | `testNegativeThreshold()` |
+| attendance | 31 | 38 | P-use (T) | `31→32(F)→35→36→37→38(T)` | `testAllDefsScoreFiveAndEight()` |
+| attendance | 31 | 38 | P-use (F) | `31→32(F)→35→36→37→38(F)` | `testInitialPresentDefToScoreTrue()` |
+| threshold | 31 | 32 | P-use (T) | `31→32(T)` (`attendance != null`, `threshold < 0`) | `testNegativeThreshold()` |
+| threshold | 31 | 32 | P-use (F) | `31→32(F)` (`attendance != null`, `threshold >= 0`) | `testAllDefsScoreFiveAndEight()` |
+| threshold | 31 | 50 | P-use (T) | `31→32(F)→35→[38(T)→39(T)→40→41→42(T)→43]×5→38(F)→49→50(T)` | `testAllDefsScoreFiveAndEight()` |
+| threshold | 31 | 50 | P-use (F) | `31→32(F)→35→[38(T)→39(T)→40→41→42(T)→43]×5→38(F)→49→50(F)` | `testScoreInitialDefToAddition()` |
+| present | 35 | 40 | C-use | `35→38(T)→39(T)→40` | `testAllDefsScoreFiveAndEight()` |
+| present | 40 | 40 | C-use | `40→41→42→38(T)→39(T)→40` | `testAllDefsScoreFiveAndEight()` |
+| present | 35 | 50 | P-use (T) | `35→38(F)→49→50(T)` | `testInitialPresentDefToScoreTrue()` |
+| present | 35 | 50 | P-use (F) | `35→38(F)→49→50(F)` | `testInitialPresentDefToScoreFalse()` |
+| present | 40 | 50 | P-use (T) | `40→41→42(T)→43→38(F)→49→50(T)` | `testAllDefsScoreFiveAndEight()` |
+| present | 40 | 50 | P-use (F) | `40→41→42(T)→43→38(F)→49→50(F)` | `testScoreInitialDefToAddition()` |
+| streak | 36 | 41 | C-use | `36→38(T)→39(T)→40→41` | `testAllDefsScoreFiveAndEight()` |
+| streak | 41 | 41 | C-use | `41→42(T)→43→38(T)→39(T)→40→41` | `testAllDefsScoreFiveAndEight()` |
+| streak | 41 | 42 | P-use (T) | `41→42(T)` | `testAllDefsScoreFiveAndEight()` |
+| streak | 41 | 42 | P-use (F) | `41→42(F)` | `testStreakResetAndBestFalseBranch()` |
+| streak | 41 | 43 | C-use | `41→42(T)→43` | `testAllDefsScoreFiveAndEight()` |
+| streak | 46 | 41 | C-use | `46→38(T)→39(T)→40→41` | `testAllDefsScoreZeroAndStreakReset()` |
+| best | 37 | 42 | P-use (T) | `37→38(T)→39(T)→40→41→42(T)` | `testAllDefsScoreFiveAndEight()` |
+| best | 43 | 42 | P-use (T) | `43→38(T)→39(T)→40→41→42(T)` | `testAllDefsScoreFiveAndEight()` |
+| best | 43 | 42 | P-use (F) | `43→38(T)→39(F)→46→38(T)→39(T)→40→41→42(F)` | `testStreakResetAndBestFalseBranch()` |
+| best | 37 | 53 | P-use (F) | `37→38(F)→49→50→53(F)` | `testInitialPresentDefToScoreFalse()` |
+| best | 43 | 53 | P-use (T) | `43→38(F)→49→50→53(T)` | `testAllDefsScoreFiveAndEight()` |
+| best | 43 | 53 | P-use (F) | `43→38(T)→39(F)→46→38(T)→39(T)→40→41→42(F)→38(F)→49→50→53(F)` | `testStreakResetAndBestFalseBranch()` |
+| score | 49 | 54 | C-use | `49→50(F)→53(T)→54` | `testScoreInitialDefToAddition()` |
+| score | 51 | 54 | C-use | `51→53(T)→54` | `testAllDefsScoreFiveAndEight()` |
+| score | 49 | 56 | C-use | `49→50(F)→53(F)→56` | `testInitialPresentDefToScoreFalse()` |
+| score | 51 | 56 | C-use | `51→53(F)→56` | `testScoreFiveDirectlyReturned()` |
+| score | 54 | 56 | C-use | `54→56` | `testAllDefsScoreFiveAndEight()` |
+| a | 38 | 39 | P-use (T) | `38→39(T)` | `testAllDefsScoreFiveAndEight()` |
+| a | 38 | 39 | P-use (F) | `38→39(F)→46` | `testAllDefsScoreZeroAndStreakReset()` |
 
 ### 3.5.2. Боломжгүй DU хосууд болон тайлбар
 
@@ -448,7 +375,7 @@ streak = 0;
 
 - `best`-ийн 37-р мөрийн Definition-ээс 53-р мөрийн Use хүрэх зам зөвхөн 43-р мөрөөр дахин тодорхойлолт үүсээгүй үед боломжтой. Эерэг ирцийн эхний элемент дээр 37-р мөрийн Def нь 42-р мөрийн P-use-д хүрээд, 43-р мөрөөр kill хийгдэнэ.
 
-- `attendance == null` үед `||` операторын short-circuit үйлдлээс шалтгаалан `threshold < 0` нөхцөл үнэлэгдэхгүй.
+- `31→32(T)` үед `||` операторын short-circuit үйлдлээс шалтгаалан `threshold < 0` нөхцөл үнэлэгдэхгүй.
 
 - `score`-ийн 49-р мөрийн Definition-ээс 54-р мөрийн Use хүрэхийн тулд 50-р мөрийн нөхцөл худал, харин 53-р мөрийн нөхцөл үнэн байх шаардлагатай.
 
@@ -533,17 +460,11 @@ JaCoCo нь кодын instruction, branch, line, complexity болон method c
 Файл: `results/jacoco-final.csv`
 
 | Үзүүлэлт | Missed | Covered | Нийт хамралт |
-
 |---|---:|---:|---:|
-
 | Instruction | 3 | 78 | 96.30% |
-
 | Branch | 0 | 16 | 100% |
-
 | Line | 1 | 23 | 95.83% |
-
 | Complexity | 1 | 10 | 90.91% |
-
 | Method | 1 | 2 | 66.67% |
 
 CSV-ийн бодит мөр:
@@ -562,9 +483,20 @@ lab10-dataflow,mn.edu.must.sqat,DataFlowTargets,3,78,0,16,1,23,1,10,1,2
 
 - `BRANCH_COVERED = 16` — биелсэн.
 
-- `LINE_MISSED = 1` — зөвшөөрөгдсөн. Энэ нь `DataFlowTargets` классын Java compiler-оос үүсгэсэн implicit constructor мөртэй холбоотой.
+- `LINE_MISSED = 1` — нэг мөр хамрагдаагүй байна. Яг аль мөр болохыг JaCoCo HTML source report-оос баталгаажуулна; CSV summary дангаараа тухайн мөрийн дугаарыг харуулахгүй.
 
-All-Defs болон All-DU-Pairs-ийн JaCoCo тайланг тус тус `jacoco-alldefs.csv`, `jacoco-alldupairs.csv` файлд хадгалсан. Эцсийн хамралтын үзүүлэлт нь 16/16 branch буюу 100% байна.
+All-Defs болон All-DU-Pairs-ийн JaCoCo тайланг тус тус `jacoco-alldefs.csv`, `jacoco-alldupairs.csv` файлд хадгалсан.
+
+**All-Defs үеийн бодит JaCoCo үзүүлэлт (`jacoco-alldefs.csv`):**
+
+| Үзүүлэлт | Missed | Covered | Нийт | Хамралт |
+|---|---:|---:|---:|---:|
+| Branch | 3 | 13 | 16 | 81.25% |
+| Line | 2 | 22 | 24 | 91.67% |
+
+**Branch coverage ба DU-pair coverage-ийн ялгааны бодит жишээ:** All-Defs үеийн хоёр тестэд `present`-ийн 35-р мөрийн анхны Definition-ээс 50-р мөрийн P-use хүртэлх зам (`35→38(F)→49→50`) хамрагдаагүй. Учир нь тухайн хоёр тестийн массив хоосон биш бөгөөд давталтад 40-р мөр `present`-ийг дахин тодорхойлдог. Энэ хосыг All-DU-Pairs шатанд хоосон массив ашигласан `testInitialPresentDefToScoreTrue()` болон `testInitialPresentDefToScoreFalse()` тестүүдээр шалгасан.
+
+All-DU-Pairs үеийн JaCoCo үзүүлэлт `jacoco-alldupairs.csv`-д Branch 16/16 (100%), Line 23/24 (95.83%) байна. Branch 100% гэдэг нь бүх шийдвэрийн салаа ажилласныг илтгэдэг болохоос бүх Definition-Use хосыг дангаараа батлахгүй. DU-pair хамралтыг Def-clear зам болон тухайн тестийн оролтоор тусад нь нотолно.
 
 ---
 
@@ -717,13 +649,9 @@ mvn test 2>&1 | tee results/mvn-test-M3.txt
 ## 4.4. Fault Seeding үр дүн
 
 | Mutation | Төрөл | Тестийн үр дүн | Дүгнэлт |
-
 |---|---|---|---|
-
 | M1 | Missing update | 11 тест, 2 Failure | Илэрсэн |
-
 | M2 | Wrong variable | Анхны 11 тест PASS; нэмэлт тестэд 1 Failure | Нэмэлт тестээр илэрсэн |
-
 | M3 | Dead definition | 12 тест, 0 Failure | JUnit тестээр илрээгүй |
 
 Мутаци бүрийн дараа эх кодыг анхны хувилбарт буцаасан:
@@ -810,7 +738,7 @@ GCD функц дээр хувьсагч бүрийн DU хосыг тодорх
 
 Bonus функц дээр Control Flow Graph байгуулж, хувьсагч бүрийн Def болон Use цэгүүдийг тодорхойлсон. All-Defs болон All-DU-Pairs хамралтыг тус тусад нь хэрэгжүүлж, DU хосуудыг тестүүдтэй холбосон.
 
-Fault Seeding хэсэгт зориудаар алдаа үүсгэж, тестүүд тухайн алдааг илрүүлж чадаж байгаа эсэхийг шалгасан. M1 болон M2 мутаци тестээр илэрсэн. M3 dead definition нь програмын ажиглагдах үр дүнд нөлөөлөөгүй тул JUnit тестээр илрээгүй.
+Fault Seeding хэсэгт зориудаар алдаа үүсгэж, тестүүд тухайн алдааг илрүүлж чадаж байгаа эсэхийг шалгасан. M1 мутацийг анхны тестүүд илрүүлсэн. Харин M2 мутацийг анхны тестүүд илрүүлээгүй бөгөөд `testM2KillPresentAndStreakDiffer()` нэмэлт тестээр илрүүлсэн. M3 dead definition нь програмын ажиглагдах үр дүнд нөлөөлөөгүй тул JUnit тестээр илрээгүй.
 
 Эцсийн Maven verify амжилттай болж, нийт 12 тест алдаагүй ажилласан. JaCoCo branch coverage 16/16 буюу 100% болсон. Энэ нь branch coverage болон DU-pair coverage нь ялгаатай хэмжүүр болохыг харуулж байна.
 
