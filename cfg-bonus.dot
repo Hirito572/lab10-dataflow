@@ -1,0 +1,53 @@
+digraph BonusCFG {
+ graph [rankdir=TB, splines=polyline, nodesep=0.38, ranksep=0.52, pad=0.25,
+        bgcolor="white", dpi=180, size="18,22", ratio=compress,
+        labelloc="b", fontsize=8, fontname="Arial",
+        label="CFG — bonus() | Actual BonusTest.java method names"];
+ node [fontname="Arial", fontsize=10, margin="0.13,0.07"];
+ edge [fontname="Arial", fontsize=7, arrowsize=0.65];
+ start [shape=oval,label="start"]; end [shape=oval,label="end"];
+ n31 [shape=oval,label="31: bonus(attendance, threshold)"];
+ n32a [shape=diamond,style=filled,fillcolor="#FCF3CF",label="32: attendance == null?"];
+ n32b [shape=diamond,style=filled,fillcolor="#FCF3CF",label="32: threshold < 0?"];
+ n33 [shape=oval,color="#C0392B",label="33: throw IllegalArgumentException"];
+ n35 [shape=oval,label="35: present = 0"]; n36 [shape=oval,label="36: streak = 0"];
+ n37 [shape=oval,label="37: best = 0"];
+ n38p [shape=diamond,style=filled,fillcolor="#FCF3CF",label="38: next attendance element exists?\nP-use: attendance"];
+ n38d [shape=oval,label="38: a = next attendance element\nDef: a"];
+ n39 [shape=diamond,style=filled,fillcolor="#FCF3CF",label="39: a > 0?"];
+ n40 [shape=oval,label="40: present = present + 1"];
+ n41 [shape=oval,label="41: streak = streak + 1"];
+ n42 [shape=diamond,style=filled,fillcolor="#FCF3CF",label="42: streak > best?"];
+ n43 [shape=oval,label="43: best = streak"]; n46 [shape=oval,label="46: streak = 0"];
+ n49 [shape=oval,label="49: score = 0"];
+ n50 [shape=diamond,style=filled,fillcolor="#FCF3CF",label="50: present >= threshold?"];
+ n51 [shape=oval,label="51: score = 5"];
+ n53 [shape=diamond,style=filled,fillcolor="#FCF3CF",label="53: best >= 5?"];
+ n54 [shape=oval,label="54: score = score + 3"]; n56 [shape=oval,label="56: return score"];
+ start -> n31 [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestNullAttendance()\ntestNegativeThreshold()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"]; n31 -> n32a [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestNullAttendance()\ntestNegativeThreshold()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n32a -> n33 [label="True: testNullAttendance()"];
+ n32a -> n32b [label="False: testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n32b -> n33 [label="True: testNegativeThreshold()"];
+ n32b -> n35 [label="False: testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n33 -> end [label="testNullAttendance()\ntestNegativeThreshold()"];
+ n35 -> n36 [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"]; n36 -> n37 [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n37 -> n38p [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n38p -> n38d [label="True: testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n38p -> n49 [label="False: testInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()"];
+ n38d -> n39 [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n39 -> n40 [label="True: testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n39 -> n46 [label="False: testAllDefsScoreZeroAndStreakReset()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n40 -> n41 [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"]; n41 -> n42 [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n42 -> n43 [label="True: testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n42 -> n38p [label="False: testStreakResetAndBestFalseBranch()\ntestM2KillPresentAndStreakDiffer()"];
+ n43 -> n38p [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n46 -> n38p [label="testAllDefsScoreZeroAndStreakReset()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n49 -> n50 [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n50 -> n51 [label="True: testAllDefsScoreFiveAndEight()\ntestInitialPresentDefToScoreTrue()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n50 -> n53 [label="False: testAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()"];
+ n51 -> n53 [label="testAllDefsScoreFiveAndEight()\ntestInitialPresentDefToScoreTrue()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n53 -> n54 [label="True: testAllDefsScoreFiveAndEight()\ntestScoreInitialDefToAddition()"];
+ n53 -> n56 [label="False: testAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+ n54 -> n56 [label="testAllDefsScoreFiveAndEight()\ntestScoreInitialDefToAddition()"];
+ n56 -> end [label="testAllDefsScoreFiveAndEight()\ntestAllDefsScoreZeroAndStreakReset()\ntestInitialPresentDefToScoreTrue()\ntestInitialPresentDefToScoreFalse()\ntestScoreInitialDefToAddition()\ntestStreakResetAndBestFalseBranch()\ntestScoreFiveDirectlyReturned()\ntestM2KillPresentAndStreakDiffer()"];
+}

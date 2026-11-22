@@ -331,14 +331,14 @@ streak = 0;
 
 ### 3.5.1. DU Pairs хүснэгт
 
-| Variable | Def line | Use line | Use type | Def-clear path / нөхцөл | Test ID |
+| Variable | Def line | Use line | Use type | Def-clear path | Test ID |
 |---|---:|---:|---|---|---|
-| attendance | 31 | 32 | P-use (T) | `31→32(T)` (`attendance == null`) | `testNullAttendance()` |
-| attendance | 31 | 32 | P-use (F) | `31→32(F)` (`attendance != null`) | `testNegativeThreshold()` |
+| attendance | 31 | 32 | P-use (T) | `31→32(T)` | `testNullAttendance()` |
+| attendance | 31 | 32 | P-use (F) | `31→32(F)` | `testAllDefsScoreFiveAndEight()` |
 | attendance | 31 | 38 | P-use (T) | `31→32(F)→35→36→37→38(T)` | `testAllDefsScoreFiveAndEight()` |
 | attendance | 31 | 38 | P-use (F) | `31→32(F)→35→36→37→38(F)` | `testInitialPresentDefToScoreTrue()` |
-| threshold | 31 | 32 | P-use (T) | `31→32(T)` (`attendance != null`, `threshold < 0`) | `testNegativeThreshold()` |
-| threshold | 31 | 32 | P-use (F) | `31→32(F)` (`attendance != null`, `threshold >= 0`) | `testAllDefsScoreFiveAndEight()` |
+| threshold | 31 | 32 | P-use (T) | `31→32(T)` | `testNegativeThreshold()` |
+| threshold | 31 | 32 | P-use (F) | `31→32(F)` | `testAllDefsScoreFiveAndEight()` |
 | threshold | 31 | 50 | P-use (T) | `31→32(F)→35→[38(T)→39(T)→40→41→42(T)→43]×5→38(F)→49→50(T)` | `testAllDefsScoreFiveAndEight()` |
 | threshold | 31 | 50 | P-use (F) | `31→32(F)→35→[38(T)→39(T)→40→41→42(T)→43]×5→38(F)→49→50(F)` | `testScoreInitialDefToAddition()` |
 | present | 35 | 40 | C-use | `35→38(T)→39(T)→40` | `testAllDefsScoreFiveAndEight()` |
@@ -378,6 +378,8 @@ streak = 0;
 - `31→32(T)` үед `||` операторын short-circuit үйлдлээс шалтгаалан `threshold < 0` нөхцөл үнэлэгдэхгүй.
 
 - `score`-ийн 49-р мөрийн Definition-ээс 54-р мөрийн Use хүрэхийн тулд 50-р мөрийн нөхцөл худал, харин 53-р мөрийн нөхцөл үнэн байх шаардлагатай.
+
+**Branch 100% байсан ч хамрагдаагүй DU хосын бодит жишээ:** `best` хувьсагчийн 37-р мөрийн Definition-ээс 53-р мөрийн P-use-ийн True салбар (`best >= 5`) руу Def-clear зам үүсэхгүй. `best >= 5` болохын тулд давталтын явцад 43-р мөрийн `best = streak` Definition заавал үүсэж, 37-р мөрийн Definition-ийг kill хийнэ. Иймээс `37→53(T)` DU хос хамрагдах боломжгүй. Гэсэн хэдий ч 53-р мөрийн True салбар 43-р мөрийн Definition-ээр, False салбар 37-р мөрийн Definition-ээр ажиллаж болох тул JaCoCo Branch coverage 16/16 (100%) байж болно. Энэ нь Branch coverage нь DU-pair coverage-тэй адил хэмжүүр биш гэдгийг харуулна.
 
 ### 3.5.3. Дүгнэлт
 
